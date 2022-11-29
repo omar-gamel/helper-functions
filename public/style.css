@@ -1,0 +1,12 @@
+h1{
+  color: black;
+}
+
+body {
+  font-family: system-ui;
+  color: white;
+  height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
