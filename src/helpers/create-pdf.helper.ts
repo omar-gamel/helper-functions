@@ -2,7 +2,7 @@ import * as puppeteer from 'puppeteer';
 import * as path from 'path';
 import * as fs from 'fs';
 
-export async function ConvertHtmlToPdfWithPuppeteer() {
+export async function createPdfFile() {
   const title = '👋 Hello, Omar';
   /*
     1- Puppeteer launches Chromium in headless mode.  
@@ -49,7 +49,7 @@ export async function ConvertHtmlToPdfWithPuppeteer() {
     { title }
   );
   // 5- find or create new path of pdf file
-  const checkDir = path.join(process.cwd(), 'public/uploads/pdf');
+  const checkDir = path.join(process.cwd(), 'public/uploads');
   if (!fs.existsSync(checkDir)) {
     fs.mkdirSync(checkDir, {
       recursive: true
@@ -67,5 +67,5 @@ export async function ConvertHtmlToPdfWithPuppeteer() {
     preferCSSPageSize: false
   });
   await browser.close();
-  return path.join(process.cwd(), 'public/uploads/files/') + fileName;
+  return path.join(process.cwd(), 'public/uploads/') + fileName;
 }
