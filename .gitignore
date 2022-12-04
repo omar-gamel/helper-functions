@@ -85,10 +85,6 @@ lerna-debug.log*
 
 .env
 
-!public/
-public/*
-!public/default/
-
 # npm run warning logs
 warn.log
 package-lock.json

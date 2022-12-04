@@ -13,28 +13,20 @@ export async function createPdfFile() {
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
-  // 2- create new page
+
   const page = await browser.newPage();
-  // 3- load html page file
   await page.goto(path.join(process.cwd(), 'public/index.html'));
   const override = Object.assign(page.viewport(), { width: 1366 });
   await page.setViewport(override);
-  await page.waitFor('*');
   page.on('console', consoleObj => console.log(consoleObj.text()));
-  // 4- edite on html file element by js dom
+
   await page.evaluate(
     async ({ title }) => {
       const titleTage = document.querySelector('#title') as HTMLElement | null;
-
-      // remove google tag manager
-      const gtm = document.querySelector('#hubspot-messages-iframe-container' ) as HTMLElement | null;
-      if (gtm) gtm.style.width = '0px';
-
-      // inject information
       titleTage.innerText = title;
       titleTage.style.fontSize = '6vw';
 
-      //waiting until all images loaded
+      // 1- waiting until all images loaded
       const selectors = Array.from(document.querySelectorAll('img'));
       await Promise.all(
         selectors.map(img => {
@@ -48,23 +40,19 @@ export async function createPdfFile() {
     },
     { title }
   );
-  // 5- find or create new path of pdf file
   const checkDir = path.join(process.cwd(), 'public/uploads');
-  if (!fs.existsSync(checkDir)) {
-    fs.mkdirSync(checkDir, {
-      recursive: true
-    });
-  }
-  // 6- create pdf file name
+  if (!fs.existsSync(checkDir)) fs.mkdirSync(checkDir, { recursive: true });
+
   const fileName = `file-${Math.floor(Math.random() * 100)}.pdf`;
-  const fileAsPdf = `${checkDir}/${fileName}`;
-  await page.emulateMediaType('print');
+  const filePathAsPdf = `${checkDir}/${fileName}`;
+
+  await page.emulateMediaType('screen');
   await page.pdf({
-    path: fileAsPdf,
-    format: 'A4',
+    path: filePathAsPdf,
+    width: 1700,
+    height: 1277,
     printBackground: true,
-    pageRanges: '1',
-    preferCSSPageSize: false
+    pageRanges: '1'
   });
   await browser.close();
   return path.join(process.cwd(), 'public/uploads/') + fileName;
