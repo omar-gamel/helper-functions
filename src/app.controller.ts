@@ -1,5 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { createPdfFile } from './helpers/create-pdf.helper';
+import { cronJob } from './helpers/cron-job.helper';
 
 @Controller()
-export class AppController {}
+export class AppController {
+  @Get('test')
+  async test() {
+    return await cronJob();
+  }
+}
